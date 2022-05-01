@@ -68,6 +68,34 @@ app.post('/todo', (req, res) => {
     }
 });
 
+
+//method for replacing or updating a todo on the 'todosStorage'
+app.put('/todo/:id', (req, res) => {
+    try {
+        const id = Number(req.params.id) //convert input id to number since id's from 'todosStorage' are also numbers
+        const body = req.body;
+
+        var todo = null;
+        todosStorage.forEach(todoElement => {
+            if(todoElement.id === id){
+                todo = todoElement;
+                todo.id = todoElement.id
+                todo.name = body.name;
+                todo.completed = body.completed;
+            }
+        });
+
+        res.sendStatus(200);
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+
+});
+
+
 //Runs the localhost server and expose it on the specified port number
 app.listen(`${port}`, () =>{
     console.log("The server is listening on port", `${port}`);
