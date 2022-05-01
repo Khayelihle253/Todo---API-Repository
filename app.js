@@ -31,7 +31,7 @@ app.get('/todos', (req, res) =>{
 var id = 1 //next object to be added/posted to the todosStorage should start with 1
 
 //method for adding a todo to the 'todosStorage'
-app.post('/todo', (req, res) => { 
+app.post('/todos', (req, res) => { 
     try {
         const body = req.body;
 
@@ -70,7 +70,7 @@ app.post('/todo', (req, res) => {
 
 
 //method for replacing or updating a todo on the 'todosStorage'
-app.put('/todo/:id', (req, res) => {
+app.put('/todos/:id', (req, res) => {
     try {
         const id = Number(req.params.id) //convert input id to number since id's from 'todosStorage' are also numbers
         const body = req.body;
@@ -86,6 +86,35 @@ app.put('/todo/:id', (req, res) => {
         });
 
         res.sendStatus(200);
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+
+});
+
+
+//method for deleting a todo from the 'todosStorage'
+app.delete('/todos/:id', (req, res) => {
+    try {
+        const id = Number(req.params.id);
+
+        let index = null;
+        todosStorage.forEach(todoElement => {
+            if(todoElement.id === id){
+                index = id;
+            }
+        });
+
+        if (index !== null){
+            todosStorage.splice(index, 1); // At position "index", remove 1 item
+            res.sendStatus(200);
+        }else{
+            throw Error ("You are attempting to delete a non-existing todo")
+        }
+        
 
     } catch (error) {
         res.status(500).json({
