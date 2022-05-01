@@ -27,6 +27,7 @@ app.get('/todos', (req, res) =>{
     }
 });
 
+
 var id = 1 //next object to be added/posted to the todosStorage should start with 1
 
 //method for adding a todo to the 'todosStorage'
@@ -40,12 +41,22 @@ app.post('/todo', (req, res) => {
             completed: body.completed
         }
 
+        //name and copleted status null validation
+        if(todoObject.name === "" || todoObject.completed === ""){ 
+            throw Error ("Error: There must exist a todo with a status")
+        }
+
         if(todoObject.name === "I'm lazy"){
-            throw Error("You are not allowed to be lazy");
+            throw Error("Error: You are not allowed to be lazy");
         }
         
-        todosStorage.push(todoObject);
-        res.sendStatus(200);
+        //post, with "completed" status validation
+        if (todoObject.completed === "true" || todoObject.completed === "false"){
+            todosStorage.push(todoObject);
+            res.sendStatus(200);
+        }else{
+            throw Error("Error: completed must either be true or false")
+        }
 
         id += 1; //increment the id to the next number
 
