@@ -43,7 +43,7 @@ app.post('/todos', (req, res) => {
 
         //name and copleted status null validation
         if(todoObject.name === "" || todoObject.completed === ""){ 
-            throw Error ("Error: There must exist a todo with a status")
+            throw Error ("Error: There must exist a 'todo' with a corresponding 'completed' status")
         }
 
         if(todoObject.name === "I'm lazy"){
@@ -55,7 +55,7 @@ app.post('/todos', (req, res) => {
             todosStorage.push(todoObject);
             res.sendStatus(200);
         }else{
-            throw Error("Error: completed must either be true or false")
+            throw Error("Error: 'completed' must either be true or false");
         }
 
         id += 1; //increment the id to the next number
@@ -85,7 +85,24 @@ app.put('/todos/:id', (req, res) => {
             }
         });
 
-        res.sendStatus(200);
+        //put validations
+        if(todo === null){
+            throw Error ("You are attempting to update a non-existing todo, do a 'POST' instead")
+        }
+        if(todo.name === "I'm lazy"){
+            throw Error("Error: You are not allowed to be lazy");
+        }
+
+        if(todo.name === "" || todo.completed === ""){ 
+            throw Error ("Error: There must exist a 'todo' with a corresponding 'completed' status")
+        }
+
+        //put, with "completed" status validation
+        if (todo.completed === "true" || todo.completed === "false"){
+            res.sendStatus(200);
+        }else{
+            throw Error("Error: 'completed' must either be true or false")
+        }        
 
     } catch (error) {
         res.status(500).json({
